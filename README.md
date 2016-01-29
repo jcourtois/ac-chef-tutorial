@@ -1,4 +1,4 @@
-# ac-chef-tutorial
+# Infrastructure Automation with Chef
 
 ## Before we start
 We want to make this a great learning experience. We would encourage you to type all the code and commands yourself and follow the steps. Also please make sure you understand why and what you are doing. Don't hesitate to ask us for help.
@@ -254,16 +254,16 @@ mysql -uroot -pthought
 ```
 ### Create Minion Database
 #### What databases do you currently have?
-After you have successfully connected to the MySQL REPL enter `show databases`; in the REPL. As you can see there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
+After you have successfully connected to the MySQL REPL enter `show databases`; in the REPL. As you can see, there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
 ### Include recipe to help create a database
 Now we will use the database MySQL LWRP to create a MySQL database with the name 'miniondb'. The database mysql LWRP requires the the chef-mysql gem to be present. We can accomplish this by including the `database::mysql` recipe in `default.rb`.
 ```
 include_recipe 'database::mysql'
 ```
 ### Exercise 4: Create a MySQL database with the name miniondb
-Take a look at the database cookbook documentation. Now, use the mysql_database LWRP to create a database with the name miniondb. You will know you are successful when you can see miniondb when you show databases in the MySQL REPL.
+Take a look at the database cookbook documentation. Now, use the mysql_database LWRP to create a database with the name miniondb. You will know you are successful when you see miniondb after executing `show databases` in the MySQL REPL.
 #### Check if your app works!
-Run your app, and check if you can add, view and remove your minions! You will need to figure out how to use tasks defined in the app to create the required table. 
+Run your app. Check if you can add, view and remove your minions. You will need to figure out how to use tasks defined in the app to create the required table. 
 ### Test With Serverspec
 #### Automating tests to your work
 As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
@@ -275,12 +275,14 @@ kitchen verify
 ### Exercise 4: Add more Tests
 Add serverspec tests for the following... 
 [make sure your tests fail on an unconverged instance and succeed after the cookbook is applied]
-You can find documentation on serverspec at http://serverspec.org
+Explore the documentation for [serverspec](http://serverspec.org) 
 1. the bundler gem is installed
 2. the mysqld service is running
 ### Add Another Platform
- Will this work on other operating systems?
-A good chef cookbook should be platform-independent. That is why each resource has multiple providers. The correct provider is selected for the platform. Serverspec tests can also be written so that they are platform independent. Test-kitchen allows you to test your cookbook against multiple platforms at once.
+Will this work on other operating systems?
+A good chef cookbook should be platform-independent. Each resource often has multiple providers to support this goal. The correct provider is typically automatically selected for the platform – occasionally we might have to specify it explicitly.
+
+Serverspec tests can also be written so that they are platform-independent. Test-kitchen allows you to validate this.
 ### Exercise 5: Add Another Platform
 Add a second platform to your `.kitchen.yml` file. Use `bento/centos-7.1`. Run `kitchen test -c` to converge and test CentOS and Ubuntu concurrently.
 ### Troubleshooting
