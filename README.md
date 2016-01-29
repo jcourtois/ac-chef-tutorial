@@ -1,19 +1,19 @@
 # ac-chef-tutorial
 
 ## Before we start
-We want to make this a great learning experience. We would encourage you to type all the code and commands yourself and follow the steps. Also please make sure you understand why and what you are doing. We have provided checkboxes for you to keep track of your progress. Work smart and play smart ! Dont hesitate to ask the coaches for help.
+We want to make this a great learning experience. We would encourage you to type all the code and commands yourself and follow the steps. Also please make sure you understand why and what you are doing. Don't hesitate to ask us for help.
 Also you will see that setting up machines is a lot of waiting around, not a problem - you can work on your worksheets while waiting.
 
 ## Prerequisites
 
-You must already be aware of the tools required before we start.
+We'll be using the following tools.
 
-Sublime from http://www.sublimetext.com/3 (optional)
-Vagrant from https://www.vagrantup.com/downloads
-Virtualbox 4.3.18 from https://www.virtualbox.org/wiki/Download_Old_Builds_4_3 (other versions are OK) 
-Chef-dk from https://downloads.chef.io/chef-dk/mac/#/
+[Sublime](http://www.sublimetext.com/3)
+[Vagrant](https://www.vagrantup.com/)
+[Virtualbox](from https://www.virtualbox.org/)
+[Chef-dk](https://downloads.chef.io/chef-dk/mac/#/)
 
-Recommended installation using homebrew:
+## Recommended installation using homebrew:
 ```
 brew install Caskroom/cask/virtualbox
 brew install Caskroom/cask/vagrant
