@@ -272,32 +272,29 @@ Next try to add a minion. Oh no! A database error. This makes sense because we h
 But first, write as test and see it fail.
 
 ## Installing MySQL
-### Add database cookbook
-We are going to use the database community cookbook (v 4.0.9) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Make sure this dependency is included in our `metadata.rb` file.
-###  Install MySQL server
-First we must install MySQL Community Server. >>The database cookbook depends on the MySQL cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook.>> First we must include the `mysql::server` recipe. Add the following lines to your `default.rb` recipe.
+#### New dependencies
 ```ruby
-include_recipe 'mysql::server'
+depends 'apt',             '=2.9.2'
+depends 'mysql',           '~> 6.0'
+depends 'mysql2_chef_gem', '~> 1.0'
+depends 'database',        '=4.0.9'
 ```
-### Verify mysql is running.
+####  Install MySQL server
+We can install MySQL by using the [`mysql_service`](https://github.com/chef-cookbooks/mysql#mysql_service) resource. You can get away with just supplying the port, version, initial root password, and actions.
+
+#### Verify mysql is running.
 Run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that MySQL is running by executing `service mysql status` returns running. Exit the machine.
 
-### Setting the root password
-The next thing we need would like to do is set the root password so that our app will be able to connect to MySQL. We do this by setting the server_root_password attribute. By looking in the `dbclient.rb` file in the app/lib directory we can determine the the app expects the root password to be 'thought'. Therefore add the following line to the `defaults.rb` file in your attributes directory. Let's also set the repl password so that we can connect to the MySQL command prompt using the same password.
-```ruby
-default['mysql']['server_root_password'] = 'thought'
-default['mysql']['server_repl_password'] = 'thought'
-```
 #### Check if the password has been added.
 Converge again. When we log into the machine, we should be able to connect to the MySQL REPL by executing:
 ```sh
 mysql -uroot -pthought
 ```
-### Create Minion Database
-#### What databases do you currently have?
+#### Create Minion Database
 After you have successfully connected to the MySQL REPL enter `show databases`; in the REPL. As you can see, there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
+
 ### Include recipe to help create a database
-Now we will use the database MySQL LWRP to create a MySQL database with the name 'miniondb'. The database mysql LWRP requires the the chef-mysql gem to be present. We can accomplish this by including the `database::mysql` recipe in `default.rb`.
+Now we will use the database MySQL LWRP to create a MySQL database with the name 'miniondb'. The database mysql LWRP requires the `[mysql2](https://github.com/brianmario/mysql2#mysql2---a-modern-simple-and-very-fast-mysql-library-for-ruby---binding-to-libmysql)` gem to be present. The database cookbook [recommends](https://github.com/chef-cookbooks/database#resourcesproviders) that we use the [`mysql2_chef_gem`](https://github.com/chef-cookbooks/database#resourcesproviders) for installation; make sure the dependency is in `metadata.rb`, then use it in your recipe by invoking the [`mysql2_chef_gem`](https://github.com/sinfomicien/mysql2_chef_gem#mysql2_chef_gem) resource.
 ```
 include_recipe 'database::mysql'
 ```
