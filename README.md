@@ -204,14 +204,29 @@ On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the co
 cd /minions/lib
 ruby run_app.rb
 ```
-Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). Your turn!
-### Exercise 2: Install Bundler
+Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). 
+
+
+### Exercise 2: Automating tests to your work
+As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
+#### Run the tests.
+```
+kitchen verify
+```
+
+Before installing bundler via the cookbook, let's write a serverspec test to make sure bundler is installed. Explore the documentation for [serverspec](http://serverspec.org)
+(Make sure your test fails on an unconverged instance and succeed after the cookbook is applied.)
+
+### Exercise 3: Install Bundler
 Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
 ### Verify app is running
 When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message
 ```
 Sinatra/1.4.5 has taken the stage on 4567 for development with backup from WEBrick
 ```
+
+Converge your instance and see if the test you wrote succeeds.
+
 Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen login` and execute the following command. It should show you the html from the front page with 'Hello Minions!'
 ```
 curl http://localhost:4567
@@ -264,13 +279,6 @@ include_recipe 'database::mysql'
 Take a look at the database cookbook documentation. Now, use the mysql_database LWRP to create a database with the name miniondb. You will know you are successful when you see miniondb after executing `show databases` in the MySQL REPL.
 #### Check if your app works!
 Run your app. Check if you can add, view and remove your minions. You will need to figure out how to use tasks defined in the app to create the required table. 
-### Test With Serverspec
-#### Automating tests to your work
-As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
-#### Run the tests.
-```
-kitchen verify
-```
 
 ### Exercise 4: Add more Tests
 Add serverspec tests for the following... 
