@@ -109,7 +109,7 @@ suites:
 
 ### Print out kitchen instances
 
-The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run kitchen list it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
+The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run `kitchen list` it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
 kitchen list
 
 ### Create a Virtual Machine instance
@@ -129,7 +129,7 @@ ip addr
 exit
 ```
 ### Check your instance status
-If we run kitchen list now, we should see that the status of our instance is 'Created'.
+If we run `kitchen list` now, we should see that the status of our instance is 'Created'.
 ### Your First Cookbook
 Main Objective: Write a Chef cookbook that will provision an application server for the Minions app.
 Sharing a Folder
@@ -184,70 +184,86 @@ Now that we have installed rbenv and ruby_build, Lets use the 'rbenv_ruby' LWRP 
 run_list:
   - wdiy
 ```
- Lets apply the cookbook to the instance. 'kitchen converge' will apply your run_list to a created instance.
+Let's apply the cookbook to the instance. `kitchen converge` will apply your run_list to a created instance.
+```
 kitchen converge
+```
 ### SSH into box
 kitchen login
  Check the ruby version
-On the vagrant machine run 'ruby -v'. The command should print 2.1.1 to the console. If you were unsuccessful keep updating your recipe and converging until it works!
+On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
  Now, that we have ruby installed lets try running the app
 ```sh
 cd /minions/lib
 ruby run_app.rb
 ```
  Not ready to run app yet?
- Not sure what the error means? Look it up or ask your coaches.
+ Not sure what the error means? Look it up or ask!
 Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). Your turn!
 ### Exercise 2: Install Bundler
 Extend default.rb so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
- Verify app is running
-When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message 'Sinatra/1.4.5 has taken the stage on 4567 for development with backup from WEBrick'. Lets quickly verify this with curl. Open a new terminal tab, run 'kitchen login' and execute the following command. It should show you the html from the front page with 'Hello Minions!'
+### Verify app is running
+When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message
+```
+Sinatra/1.4.5 has taken the stage on 4567 for development with backup from WEBrick
+```
+Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen login` and execute the following command. It should show you the html from the front page with 'Hello Minions!'
+```
 curl http://localhost:4567
- Access your app on a browser
+```
+### Access your app on a browser
 Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. Therefore when we access localhost:4567 in our host browser it will display content from the guest at port 4567
- To set up the forwarded port, add the following line to your driver configuration in .kitchen.yml.
+To set up the forwarded port, add the following line to your driver configuration in .kitchen.yml.
 :kitchen.yml
 ```ruby
   network:
     - ["forwarded_port", {guest: 4567, host: 4567}]
 ```
 ### Recreate the VM
-Now, we must destroy and recreate the VM in order to apply this change. Run 'kitchen destroy' from the host machine. Now, this time instead of running 'kitchen create' lets use the 'kitchen setup' command which will create the VM apply the runlist with Chef.
- Try to add a minion.
-Now lets login to the guest machine again, bundle install, and start the minions application. Now, from the browser on your host machine, navigate to localhost:4567. You should see 'Hello Minions!' displayed in the browser.
+Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` lets use the `kitchen setup` command, which will create the VM apply the runlist with Chef.
 
-Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the mysql database yet! Time to improve our default.rb recipe.
-Install Mysql
+### Try to add a minion.
+Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to localhost:4567. You should see 'Hello Minions!' displayed in the browser.
+
+Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the mysql database yet! Time to improve our `default.rb` recipe.
+## Install Mysql
 ### Add database cookbook
-We are going to use the database community cookbook (v 2.3.1) from the chef supermarket (https://supermarket.chef.io/cookbooks/database). Lets go ahead and add this dependency in our metadata.rb file.
+We are going to use the database community cookbook (v 2.3.1) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Lets go ahead and add this dependency in our `metadata.rb` file.
 ###  Install mysql server
 First we must install the mysql server. The database cookbook depends on the mysql cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook. First we must include the mysql::server recipe. Add the following lines to your default.rb recipe.
+```ruby
 include_recipe "mysql::server"
- Verify mysql is running.
-Now lets run $ kitchen converge to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that mysql is running by executing '$ service mysql status' returns running. now lets exit. 
- Set root password
-The next thing we need would like to do is set the root password so that our app will be able to connect to mysql. We do this by setting the server_root_password attribute. By looking in the dbclient.rb file in the app/lib directory we can determine the the app expects the root password to be 'thought'. Therefore add the following line to the defaults.rb file in your attributes directory. Lets also set the repl password so that we can connect to the mysql command prompt using the same password.
+```
+### Verify mysql is running.
+Now lets run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that mysql is running by executing `service mysql status` returns running. now lets exit.
+
+### Set root password
+The next thing we need would like to do is set the root password so that our app will be able to connect to mysql. We do this by setting the server_root_password attribute. By looking in the `dbclient.rb` file in the app/lib directory we can determine the the app expects the root password to be 'thought'. Therefore add the following line to the `defaults.rb` file in your attributes directory. Let's also set the repl password so that we can connect to the mysql command prompt using the same password.
 ```ruby
 default['mysql']['server_root_password'] = 'thought'
 default['mysql']['server_repl_password'] = 'thought'
 ```
- Check if the password has been added.
+#### Check if the password has been added.
 Now lets converge again. Now when we log into the machine we should be able to connect to the mysql repl by executing...
+```sh
 mysql -uroot -pthought
+```
 ### Create Minion Database
- What databases do you currently have?
+#### What databases do you currently have?
 After you have successfully connected to the mysql repl enter `show databases`; in the repl. As you can see there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
- Include recipe to help create a database
-Now we will use the database mysql LWRP to create a mysql database with the name 'miniondb'. The database mysql LWRP requires the the chef-mysql gem to be present. We can accomplish this by including the database::mysql recipe in default.rb.
-include_recipe "database::mysql"
+### Include recipe to help create a database
+Now we will use the database mysql LWRP to create a mysql database with the name 'miniondb'. The database mysql LWRP requires the the chef-mysql gem to be present. We can accomplish this by including the database::mysql recipe in `default.rb`.
+```
+include_recipe 'database::mysql'
+```
 ### Exercise 4: Create a mysql database with the name miniondb
 Take a look at the database cookbook documentation. Now, use the mysql_database LWRP to create a database with the name miniondb. You will know you are successful when you can see miniondb when you show databases in the mysql repl.
- Check if your app works!
+#### Check if your app works!
 Run your app, and check if you can add, view and remove your minions ! You will need to figure out how to use tasks defined in the app to create the required table. 
 ### Test With Serverspec
- Automating tests to your work
-As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named default_spec.rb with one example test in it.
- Run the tests.
+#### Automating tests to your work
+As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
+#### Run the tests.
 ```kitchen verify.```
 
 ### Exercise 4: Add more Tests
@@ -259,8 +275,8 @@ You can find documentation on serverspec at http://serverspec.org
 ### Add Another Platform
  Will this work on other Operating Systems?
 A good chef cookbook should be platform independent. That is why each resource has multiple providers. The correct provider is selected for the platform. Serverspec tests can also be written so that they are platform independent. Test-kitchen allows you to test your cookbook against multiple platforms at once.
- Exercise 5: Add Another Platform
-Add a second platform to your .kitchen.yml file. Use the box at this dropbox url https://www.dropbox.com/s/atu4at3q4g9wg6z/centos-66.box?dl=0. Run '$ kitchen test -c' to converge and test centos and ubuntu concurrently.*
+### Exercise 5: Add Another Platform
+Add a second platform to your .kitchen.yml file. Use the box at this dropbox url https://www.dropbox.com/s/atu4at3q4g9wg6z/centos-66.box?dl=0. Run `$ kitchen test -c` to converge and test centos and ubuntu concurrently.*
 ### Troubleshooting
  Mysql on Ubuntu might have a problem, so you will have to sometimes make sure its running before creating a database.
  Try using the service resource to start mysql if it has not started. Before you run the recipe to create a database.
