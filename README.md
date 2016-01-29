@@ -225,7 +225,11 @@ Now, that we have ruby installed let's try running the app
 cd /minions/lib
 ruby run_app.rb
 ```
-Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). But let's write a test first in true TDD fashion!
+Oops! You should see the following error:
+
+>'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra).
+
+Let's write a test first in true TDD fashion!
 
 ### Exercise 2: Adding automated tests
 As we evolve our recipe, we can manually test our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. 
