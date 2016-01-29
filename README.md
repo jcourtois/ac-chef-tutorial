@@ -153,16 +153,16 @@ Main Objective: Write a Chef cookbook that will provision an application server 
 ### Sharing a Folder
 How will we get the app code onto the virtual machine? For now, let's share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
 
-Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
-
-You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
-
 ### kitchen.yml:
 ```YAML
 driver:
   synced_folders:
     - ['../app', '/minions']
 ```
+Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
+
+You can use this [validator](http://codebeautify.org/yaml-validator) to check if your yaml is valid.
+
 Since we have changed our VM configuration we must destroy the VM and recreate it.
 ```
 kitchen destroy
