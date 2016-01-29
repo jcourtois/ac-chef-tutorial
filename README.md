@@ -7,26 +7,25 @@ Also you will see that setting up machines is a lot of waiting around, not a pro
 ## Prerequisites
 
 We'll be using the following tools.
+- [Vagrant](https://www.vagrantup.com/)
+- [Virtualbox](https://www.virtualbox.org/)
+- [Chef-dk](https://downloads.chef.io/chef-dk/mac/#/)
 
-[Sublime](http://www.sublimetext.com/3)
-[Vagrant](https://www.vagrantup.com/)
-[Virtualbox](from https://www.virtualbox.org/)
-[Chef-dk](https://downloads.chef.io/chef-dk/mac/#/)
+It's useful to have a decent text editor handy, too – like [Sublime](http://www.sublimetext.com/3) or [Atom](https://atom.io/).
 
 ## Recommended installation using homebrew:
-```
+```sh
 brew install Caskroom/cask/virtualbox
 brew install Caskroom/cask/vagrant
-brew install Caskroom/cask/sublime-text3
 
 vagrant box add bento/ubuntu-14.04
 vagrant box add bento/centos-7.1
 ```
 
 Verify required installations are complete.
-```
-vagrant --version
+```sh
 virtualbox
+vagrant --version
 chef --version
 kitchen --version
 berks --version
