@@ -259,10 +259,10 @@ Now, we must destroy and recreate the VM in order to apply this change. Run `kit
 ### Try to add a minion.
 Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to `http://localhost:4567`. You should see 'Hello Minions!' displayed in the browser.
 
-Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe.
+Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe. But first, write as test and see it fail.
 ## Installing MySQL
 ### Add database cookbook
-We are going to use the database community cookbook (v 2.3.1) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Let's go ahead and add this dependency in our `metadata.rb` file.
+We are going to use the database community cookbook (v 4.0.9) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Let's go ahead and add this dependency in our `metadata.rb` file.
 ###  Install MySQL server
 First we must install MySQL Community Server. >>The database cookbook depends on the MySQL cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook.>> First we must include the `mysql::server` recipe. Add the following lines to your `default.rb` recipe.
 ```ruby
@@ -295,18 +295,12 @@ Take a look at the database cookbook documentation. Now, use the mysql_database 
 #### Check if your app works!
 Run your app. Check if you can add, view and remove your minions. You will need to figure out how to use tasks defined in the app to create the required table. 
 
-### Exercise 4: Add more Tests
-Add serverspec tests for the following... 
-[make sure your tests fail on an unconverged instance and succeed after the cookbook is applied]
-Explore the documentation for [serverspec](http://serverspec.org) 
-1. the bundler gem is installed
-2. the mysqld service is running
-### Add Another Platform
+### Exercise 5: Add Another Platform
 Will this work on other operating systems?
 A good chef cookbook should be platform-independent. Each resource often has multiple providers to support this goal. The correct provider is typically automatically selected for the platform – occasionally we might have to specify it explicitly.
 
 Serverspec tests can also be written so that they are platform-independent. Test-kitchen allows you to validate this.
-### Exercise 5: Add Another Platform
+
 Add a second platform to your `.kitchen.yml` file. Use `bento/centos-7.1`. Run `kitchen test -c` to converge and test CentOS and Ubuntu concurrently.
 ### Troubleshooting
 MySQL on Ubuntu might have a problem, so you will have to sometimes make sure its running before creating a database.
