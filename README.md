@@ -94,6 +94,7 @@ We have specified that we will be using chef_solo as a provisioner (this means t
 
 Look inside the `kitchen.yml` file.
 ```YAML
+platforms:
   - name: ubuntu15
     driver:
       box: bento/ubuntu-15.04
