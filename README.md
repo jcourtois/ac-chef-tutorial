@@ -311,16 +311,5 @@ A good chef cookbook should be platform-independent. Each resource often has mul
 Serverspec tests can also be written so that they are platform-independent. Test-kitchen allows you to validate this.
 
 Add a second platform to your `.kitchen.yml` file. Use `bento/centos-7.1`. Run `kitchen test -c` to converge and test CentOS and Ubuntu concurrently.
-### Troubleshooting
-MySQL on Ubuntu might have a problem, so you will have to sometimes make sure its running before creating a database.
-Try using the service resource to start MySQL if it has not started. Before you run the recipe to create a database.
-
-```ruby
-service 'mysql' do
-  action :start
-  only_if 'test -f /etc/init.d/mysql'
-end
-```
-
-### Installing ruby 2.1.1
-There is a bug in the documentation – as the resource does not accept "names". Just specify the version as the resource name and it will work.
+## Troubleshooting
+If Ubuntu is having trouble finding packages (looks like a bunch of attempts to download, returning with 404s), then add `include_recipe::apt` to the beginning of your recipe. This will call `apt-get update` and cause `apt` to update its list of package locations.
