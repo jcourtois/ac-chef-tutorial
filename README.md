@@ -294,12 +294,13 @@ mysql -uroot -pthought
 After you have successfully connected to the MySQL REPL enter `show databases`; in the REPL. As you can see, there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
 
 ### Include recipe to help create a database
-Now we will use the database MySQL LWRP to create a MySQL database with the name 'miniondb'. The database mysql LWRP requires the `[mysql2](https://github.com/brianmario/mysql2#mysql2---a-modern-simple-and-very-fast-mysql-library-for-ruby---binding-to-libmysql)` gem to be present. The database cookbook [recommends](https://github.com/chef-cookbooks/database#resourcesproviders) that we use the [`mysql2_chef_gem`](https://github.com/chef-cookbooks/database#resourcesproviders) for installation; make sure the dependency is in `metadata.rb`, then use it in your recipe by invoking the [`mysql2_chef_gem`](https://github.com/sinfomicien/mysql2_chef_gem#mysql2_chef_gem) resource.
+Now we will use the database MySQL LWRP to create a MySQL database with the name 'miniondb'. The database mysql LWRP requires the `[mysql2](https://github.com/brianmario/mysql2#mysql2---a-modern-simple-and-very-fast-mysql-library-for-ruby---binding-to-libmysql)` gem to be present. The database cookbook [recommends](https://github.com/chef-cookbooks/database#resourcesproviders) that we use the [`mysql2_chef_gem`](https://github.com/chef-cookbooks/database#resourcesproviders) cookbook for its installation; make sure the dependency is in `metadata.rb`, then use it in your recipe by invoking the [`mysql2_chef_gem`](https://github.com/sinfomicien/mysql2_chef_gem#mysql2_chef_gem) resource.
 ```
 include_recipe 'database::mysql'
 ```
 ### Exercise 4: Create a MySQL database with the name miniondb
-Take a look at the database cookbook documentation. Now, use the mysql_database LWRP to create a database with the name miniondb. You will know you are successful when you see miniondb after executing `show databases` in the MySQL REPL.
+Take a look at the database cookbook documentation. Now, use the [`mysql_database`](https://github.com/chef-cookbooks/database#database) LWRP to create a database with the name miniondb. You will know you are successful when you see miniondb after executing `show databases` in the MySQL REPL.
+
 #### Check if your app works!
 Run your app. Check if you can add, view and remove your minions. You will need to figure out how to use tasks defined in the app to create the required table. 
 
