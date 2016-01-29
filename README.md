@@ -48,7 +48,7 @@ Take a moment to look at `metadata.rb`.
 The following lines describe the name and version of the cookbook. 
 Later we will be specifying our cookbook dependencies in this metadata file.
 ```ruby
-name    'wdiy'
+name    'minions'
 version '0.0.1'
 ```
 Setting up the Local Environment
@@ -101,10 +101,10 @@ What is our platform?
 The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-14.10 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
 
 Look inside the `kitchen.yml` file.
-Here we have defined one suite named wdiy.
+Here we have defined one suite named minions.
 ```YAML
 suites:
-  - name: wdiy
+  - name: minions
 ```
 
 ### Print out kitchen instances
@@ -184,12 +184,12 @@ include_recipe 'rbenv::ruby_build'
 ### Exercise 1: Install Ruby 2.1.1
 Hint: Look at the [documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
 Now that we have installed rbenv and ruby_build, Let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
- We must add our cookbook to the vagrant runlist. Add the following to the wdiy suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
+ We must add our cookbook to the vagrant runlist. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 
 In .kitchen.yml:
 ```ruby
 run_list:
-  - wdiy
+  - minions
 ```
 Let's apply the cookbook to the instance. `kitchen converge` will apply your run_list to a created instance.
 ```
