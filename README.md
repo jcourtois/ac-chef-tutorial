@@ -44,7 +44,7 @@ This repo contains two directories. The 'app' directory includes a ruby app call
 
 ### The cookbook directory
 The cookbook directory will hold our chef code. We have created the basic directory structure for you. 
-Take a moment to look at the file named: metadata.rb. 
+Take a moment to look at `metadata.rb`. 
 The following lines describe the name and version of the cookbook. 
 Later we will be specifying our cookbook dependencies in this metadata file.
 ```ruby
@@ -132,8 +132,8 @@ exit
 If we run `kitchen list` now, we should see that the status of our instance is 'Created'.
 ### Your First Cookbook
 Main Objective: Write a Chef cookbook that will provision an application server for the Minions app.
-Sharing a Folder
- How will we get the app code onto the virtual machine? For now, lets share a directory from our host machine with the guest VM. Add the following line to your driver configuration in .kitchen.yml.
+#### Sharing a Folder
+How will we get the app code onto the virtual machine? For now, lets share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
 Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
 You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
 
@@ -160,17 +160,15 @@ exit
 ```
 ### Install Ruby With Chef
 Since this is a ruby app we must install ruby on the guest box in order to run the Minions app.
-We are going to use the rbenv cookbook to install ruby. First we need to add the rbenv cookbook as a dependency in our metadata file. Add the following line to metadata.rb
-:metadata.rb
+We are going to use the rbenv cookbook to install ruby. First we need to add the rbenv cookbook as a dependency in our metadata file. Add the following line to `metadata.rb`
 ```ruby
 depends 'rbenv', '1.7.1'
 ```
 ### Chef supermarket
 Take a moment to look at the rbenv cookbook documentation https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
 
-Now we can use the rbenv_ruby resource to install ruby globally on the vagrant machine. We have created an empty default.rb file for you in the recipes directory.
- Now lets include the rbenv::default and rbnev::ruby_build recipes. The rbenv::default recipe installs rbenv. And the rbenv::ruby_build recipe to install ruby-build (an rbenv plugin that allows rbenv to build rubies).
-:default.rb
+Now we can use the `rbenv_ruby` resource to install ruby globally on the vagrant machine. We have created an empty `default.rb` file for you in the recipes directory.
+ Now lets include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::default recipe` installs `rbenv`. And the `rbenv::ruby_build` recipe to install `ruby-build` (an rbenv plugin that allows rbenv to build rubies).
 ```ruby
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
@@ -178,7 +176,7 @@ include_recipe "rbenv::ruby_build"
 ### Exercise 1 : Install Ruby 2.1.1
 Hint: Look at the documentation => https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
 Now that we have installed rbenv and ruby_build, Lets use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
- We must add our cookbook to the vagrant runlist. Add the following to the wdiy suite under suites: in .kitchen.yml. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
+ We must add our cookbook to the vagrant runlist. Add the following to the wdiy suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 :kitchen.yml
 ```ruby
 run_list:
@@ -201,7 +199,7 @@ ruby run_app.rb
  Not sure what the error means? Look it up or ask!
 Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). Your turn!
 ### Exercise 2: Install Bundler
-Extend default.rb so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
+Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
 ### Verify app is running
 When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message
 ```
@@ -213,7 +211,7 @@ curl http://localhost:4567
 ```
 ### Access your app on a browser
 Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. Therefore when we access localhost:4567 in our host browser it will display content from the guest at port 4567
-To set up the forwarded port, add the following line to your driver configuration in .kitchen.yml.
+To set up the forwarded port, add the following line to your driver configuration in `.kitchen.yml`.
 :kitchen.yml
 ```ruby
   network:
@@ -230,7 +228,7 @@ Next try to add a minion. Oh no! A database error. This makes sense because we h
 ### Add database cookbook
 We are going to use the database community cookbook (v 2.3.1) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Lets go ahead and add this dependency in our `metadata.rb` file.
 ###  Install mysql server
-First we must install the mysql server. The database cookbook depends on the mysql cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook. First we must include the mysql::server recipe. Add the following lines to your default.rb recipe.
+First we must install the mysql server. The database cookbook depends on the mysql cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook. First we must include the `mysql::server recipe`. Add the following lines to your `default.rb` recipe.
 ```ruby
 include_recipe "mysql::server"
 ```
@@ -268,7 +266,7 @@ As we have written this recipe we have been manually testing our work by logging
 
 ### Exercise 4: Add more Tests
 Add serverspec tests for the following... 
-[make sure your tests fail on an un-converged instance and succeed after the cookbook is applied]
+[make sure your tests fail on an unconverged instance and succeed after the cookbook is applied]
 You can find documentation on serverspec at http://serverspec.org
 1. the bundler gem is installed
 2. the mysqld service is running
@@ -276,10 +274,10 @@ You can find documentation on serverspec at http://serverspec.org
  Will this work on other Operating Systems?
 A good chef cookbook should be platform independent. That is why each resource has multiple providers. The correct provider is selected for the platform. Serverspec tests can also be written so that they are platform independent. Test-kitchen allows you to test your cookbook against multiple platforms at once.
 ### Exercise 5: Add Another Platform
-Add a second platform to your .kitchen.yml file. Use the box at this dropbox url https://www.dropbox.com/s/atu4at3q4g9wg6z/centos-66.box?dl=0. Run `$ kitchen test -c` to converge and test centos and ubuntu concurrently.*
+Add a second platform to your `.kitchen.yml` file. Use `bento/centos-7.1`. Run `$ kitchen test -c` to converge and test centos and ubuntu concurrently.
 ### Troubleshooting
- Mysql on Ubuntu might have a problem, so you will have to sometimes make sure its running before creating a database.
- Try using the service resource to start mysql if it has not started. Before you run the recipe to create a database.
+Mysql on Ubuntu might have a problem, so you will have to sometimes make sure its running before creating a database.
+Try using the service resource to start mysql if it has not started. Before you run the recipe to create a database.
 
 ```ruby
 service "mysql" do
