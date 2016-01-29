@@ -112,12 +112,17 @@ suites:
 The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run `kitchen list` it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
 kitchen list
 
-### Create a Virtual Machine instance
-This will create that instance but will not yet apply the cookbook. This command should execute successfully and create your virtual machine. To verify that the virtual machine was successfully create open virtualbox manager (you can do this by running `virtualbox` from the command line) and look for an instance with the name 'wdiy-ubuntu14'.
+### Creating a Virtual Machine
+```
 kitchen create
- SSH into the new virtual machine
+```
+This will create an instance but will not apply any recipes. To verify that the virtual machine was successfully, open virtualbox manager (you can do this by running `virtualbox` from the command line) and look for the running guest machine.
+
+#### SSH into the new virtual machine
+```
 kitchen login
- Look around the VM
+```
+Look around the VM
 Now you are logged into the virtual machine! Your command prompt should have changed to indicate this. From now on we will call this machine the VM or the guest. Take a moment to look around. Maybe try the following commands...
 ```
 whoami
