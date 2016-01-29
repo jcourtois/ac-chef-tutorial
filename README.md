@@ -61,48 +61,57 @@ Berkshelf is a dependency manager for Chef. The cookbook we write will depend on
 source 'https://supermarket.getchef.com'
 ```
 
-metadata
-
 ###  Berksfile
 The first line tells Berkshelf to fetch cookbooks from the chef supermarket. 
 The second line tells Berkshelf to inspect the cookbook's metadata file to determine dependencies (don't worry we will try this out later). 
-To verify that your Berksfile is set up correctly, cd into the cookbook directory and make sure the following command executes without errors (nothing will be downloaded because we haven't specified any dependencies yet).
+To verify that your Berksfile is set up correctly, `cd` into the cookbook directory and make sure the following command executes without errors (nothing will be downloaded because we haven't specified any dependencies yet).
+```sh
 berks install
+```
 ### Setting Up Test Kitchen
-To borrow directly from the test-kitchen project 'Test Kitchen is an integration tool for developing and testing infrastructure code and software on isolated target platforms'. What this means is that test-kitchen is the glue that holds our toolchain together. The kitchen command line tool allows you to create virtual machines using vagrant or another driver, upload your cookbook and its dependencies to that machine using berkshelf, apply your cookbook using chef, and then verify the state of the machine using minitest or another testing framework (we won't actually try testing today).
- Look inside the ".kitchen.yml" file : What is a driver?
-We have specified that we will use vagrant (on top of virtualbox) as a driver. This means that kitchen will create instances using vagrant (other drivers allow you to create instances in the cloud using various cloud drivers).
+To borrow directly from the test-kitchen project
+
+>Test Kitchen is an integration tool for developing and testing infrastructure code and software on isolated target platforms.
+
+What this means is that test-kitchen is the glue that holds our toolchain together. The kitchen command line tool allows you to create virtual machines using vagrant or another driver, upload your cookbook and its dependencies to that machine using berkshelf, apply your cookbook using chef, and then verify the state of the machine using minitest or another testing framework.
+
+Look inside the `.kitchen.yml` file.
 ```YAML
 driver:
   name: vagrant
 ```
- Look inside the kitchen.yml file: What is a provisioner?
-We have specified that we will be using chef_solo as a provisioner (this means that we will not be needing a chef server)
+What is a driver?
+We have specified that we will use vagrant (on top of virtualbox) as a driver. This means that kitchen will create instances using vagrant (other drivers allow you to create instances in the cloud using various cloud drivers).
+
+Look inside the `kitchen.yml` file again.
 ```YAML
 provisioner:
   name: chef_solo
 ```
- Look inside the kitchen.yml file: What is our platform?
-The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-14.10 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
+What is a provisioner?
+We have specified that we will be using chef_solo as a provisioner (this means that we will not be needing a chef server)
+
+Look inside the `kitchen.yml` file.
 ```YAML
   - name: ubuntu14
     driver:
       box: chef/ubuntu-14.10
 ```
-Download this image so that it is available to test-kitchen
-We must add this box the vagrant before we can use it. Go to the following link to download the box file:
-Link: https://www.dropbox.com/s/fhv5rugwdxa2sr3/ubuntu-14.10.box?dl=0
-Then, run the following command, making sure to modify the path to the box file so that it is correct for your machine.
-vagrant box add chef/ubuntu-14.10 /path/to/downloads/ubuntu-14.10.box
- Look inside the kitchen.yml file
+What is our platform?
+The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-14.10 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
+
+Look inside the `kitchen.yml` file.
 Here we have defined one suite named wdiy.
 ```YAML
 suites:
   - name: wdiy
 ```
- Print out kitchen instances
- The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run kitchen list it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
+
+### Print out kitchen instances
+
+The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run kitchen list it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
 kitchen list
+
 ### Create a Virtual Machine instance
 This will create that instance but will not yet apply the cookbook. This command should execute successfully and create your virtual machine. To verify that the virtual machine was successfully create open virtualbox manager (you can do this by running `virtualbox` from the command line) and look for an instance with the name 'wdiy-ubuntu14'.
 kitchen create
