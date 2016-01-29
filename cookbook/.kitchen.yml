@@ -6,10 +6,10 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu14
+  - name: ubuntu15
     driver:
-      box: chef/ubuntu-14.10
+      box: bento/ubuntu-15.04
 
 
 suites:
-  - name: wdiy
+  - name: minions
