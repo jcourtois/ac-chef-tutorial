@@ -268,7 +268,9 @@ Run your app, and check if you can add, view and remove your minions! You will n
 #### Automating tests to your work
 As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
 #### Run the tests.
-```kitchen verify.```
+```
+kitchen verify
+```
 
 ### Exercise 4: Add more Tests
 Add serverspec tests for the following... 
@@ -277,8 +279,8 @@ You can find documentation on serverspec at http://serverspec.org
 1. the bundler gem is installed
 2. the mysqld service is running
 ### Add Another Platform
- Will this work on other Operating Systems?
-A good chef cookbook should be platform independent. That is why each resource has multiple providers. The correct provider is selected for the platform. Serverspec tests can also be written so that they are platform independent. Test-kitchen allows you to test your cookbook against multiple platforms at once.
+ Will this work on other operating systems?
+A good chef cookbook should be platform-independent. That is why each resource has multiple providers. The correct provider is selected for the platform. Serverspec tests can also be written so that they are platform independent. Test-kitchen allows you to test your cookbook against multiple platforms at once.
 ### Exercise 5: Add Another Platform
 Add a second platform to your `.kitchen.yml` file. Use `bento/centos-7.1`. Run `kitchen test -c` to converge and test CentOS and Ubuntu concurrently.
 ### Troubleshooting
