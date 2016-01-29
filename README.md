@@ -22,7 +22,7 @@ vagrant box add bento/ubuntu-15.04
 vagrant box add bento/centos-7.1
 ```
 
-Verify required installations are complete.
+Verify required installations are complete:
 ```sh
 virtualbox
 vagrant --version
@@ -44,33 +44,43 @@ This repo contains two directories. The 'app' directory includes a ruby app call
 
 ### The cookbook directory
 The cookbook directory will hold our chef code. We have created the basic directory structure for you. 
+
+
 Take a moment to look at `metadata.rb`. 
-The following lines describe the name and version of the cookbook. 
-Later we will be specifying our cookbook dependencies in this metadata file.
+
+
+The following lines describe the name and version of the cookbook. Later we will be specifying our cookbook dependencies in this metadata file.
 ```ruby
 name    'minions'
 version '0.0.1'
 ```
-Setting up the Local Environment
-Setting Up Berkshelf
+
+
+##Setting up the Local Environment
 
 ### Berkshelf
-Berkshelf is a dependency manager for Chef. The cookbook we write will depend on cookbooks written by the chef community. Berkshelf uses a file called Berksfile to determine what dependencies to fetch and where to fetch these dependencies from. You will notice that an empty Berksfile has been created for you. 
- Add the following lines to your Berksfile.
+Berkshelf is a dependency manager for Chef. The cookbook we write will depend on cookbooks written by the chef community. B
+
+Berkshelf uses a file called Berksfile to determine what dependencies to fetch and where to fetch these dependencies from. You will notice that an empty Berksfile has been created for you. 
+
+Add the following lines to your Berksfile.
 ```ruby
 source 'https://supermarket.getchef.com'
 metadata
 ```
 
-###  Berksfile
+####  Berksfile
 The first line tells Berkshelf to fetch cookbooks from the chef supermarket. 
+
 The second line tells Berkshelf to inspect the cookbook's metadata file to determine dependencies (don't worry we will try this out later). 
+
 To verify that your Berksfile is set up correctly, `cd` into the cookbook directory and make sure the following command executes without errors (nothing will be downloaded because we haven't specified any dependencies yet).
 ```sh
 berks install
 ```
+
 ### Setting Up Test Kitchen
-To borrow directly from the test-kitchen project
+To borrow directly from the test-kitchen project:
 
 >Test Kitchen is an integration tool for developing and testing infrastructure code and software on isolated target platforms.
 
@@ -89,8 +99,8 @@ Look inside the `kitchen.yml` file again.
 provisioner:
   name: chef_solo
 ```
-What is a provisioner?
-We have specified that we will be using chef_solo as a provisioner (this means that we will not be needing a chef server)
+
+What is a provisioner? We have specified that we will be using chef_solo as a provisioner (this means that we will not be needing a chef server)
 
 Look inside the `kitchen.yml` file.
 ```YAML
@@ -189,9 +199,7 @@ include_recipe 'rbenv::ruby_build'
 ### Exercise 1: Install Ruby 2.1.1
 Hint: Look at the [documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
 
-
-Now that we have installed rbenv and ruby_build, let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
-
+Now that we have installed rbenv and ruby_build, let's use the `rbenv_ruby` LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
 
 We must add our cookbook to the vagrant runlist. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 
@@ -207,9 +215,7 @@ kitchen converge
 ### SSH into box
 Login to the instance and check the ruby version:
 
-
 On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
-
 
 Now, that we have ruby installed let's try running the app
 ```sh
@@ -218,16 +224,16 @@ ruby run_app.rb
 ```
 Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). But let's write a test first in true TDD fashion!
 
-
 ### Exercise 2: Adding automated tests
-As we evolve our recipe, we can manually test our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
+As we evolve our recipe, we can manually test our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. 
+
+You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
 #### Run the tests.
 ```
 kitchen verify
 ```
 
 Before installing bundler via the cookbook, let's write a serverspec test to make sure bundler is installed. Explore the documentation for [serverspec](http://serverspec.org)
-
 
 Make sure your test fails on an unconverged instance and succeed after the cookbook is applied!
 
@@ -265,7 +271,10 @@ Now, we must destroy and recreate the VM in order to apply this change. Run `kit
 ### Try to add a minion.
 Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to `http://localhost:4567`. You should see 'Hello Minions!' displayed in the browser.
 
-Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe. But first, write as test and see it fail.
+Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe.
+
+But first, write as test and see it fail.
+
 ## Installing MySQL
 ### Add database cookbook
 We are going to use the database community cookbook (v 4.0.9) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Let's go ahead and add this dependency in our `metadata.rb` file.
