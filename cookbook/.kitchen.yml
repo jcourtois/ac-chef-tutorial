@@ -1,6 +1,10 @@
 ---
 driver:
   name: vagrant
+  synced_folders:
+    - ['../app', '/minions']
+  network:
+    - ['forwarded_port', {guest: 4567, host: 4567}]
 
 provisioner:
   name: chef_solo
