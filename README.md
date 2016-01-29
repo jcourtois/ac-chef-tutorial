@@ -18,7 +18,7 @@ It's useful to have a decent text editor handy, too – like [Sublime](http://ww
 brew install Caskroom/cask/virtualbox
 brew install Caskroom/cask/vagrant
 
-vagrant box add bento/ubuntu-14.04
+vagrant box add bento/ubuntu-15.04
 vagrant box add bento/centos-7.1
 ```
 
