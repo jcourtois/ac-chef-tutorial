@@ -185,8 +185,12 @@ include_recipe 'rbenv::ruby_build'
 ```
 ### Exercise 1: Install Ruby 2.1.1
 Hint: Look at the [documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
-Now that we have installed rbenv and ruby_build, Let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
- We must add our cookbook to the vagrant runlist. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
+
+
+Now that we have installed rbenv and ruby_build, let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
+
+
+We must add our cookbook to the vagrant runlist. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 
 In .kitchen.yml:
 ```ruby
@@ -206,18 +210,20 @@ On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the co
 cd /minions/lib
 ruby run_app.rb
 ```
-Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). 
+Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). But let's write a test first in true TDD fashion!
 
 
-### Exercise 2: Automating tests to your work
-As we have written this recipe we have been manually testing our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
+### Exercise 2: Adding automated tests
+As we evolve our recipe, we can manually test our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
 #### Run the tests.
 ```
 kitchen verify
 ```
 
 Before installing bundler via the cookbook, let's write a serverspec test to make sure bundler is installed. Explore the documentation for [serverspec](http://serverspec.org)
-(Make sure your test fails on an unconverged instance and succeed after the cookbook is applied.)
+
+
+Make sure your test fails on an unconverged instance and succeed after the cookbook is applied!
 
 ### Exercise 3: Install Bundler
 Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. 
