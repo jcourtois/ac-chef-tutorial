@@ -95,7 +95,7 @@ Look inside the `kitchen.yml` file.
 ```YAML
   - name: ubuntu14
     driver:
-      box: chef/ubuntu-14.10
+      box: bento/ubuntu-15.04
 ```
 What is our platform?
 The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-14.10 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
