@@ -45,11 +45,9 @@ This repo contains two directories. The 'app' directory includes a ruby app call
 ### The cookbook directory
 The cookbook directory will hold our chef code. We have created the basic directory structure for you. 
 
-
 Take a moment to look at `metadata.rb`. 
 
-
-The following lines describe the name and version of the cookbook. Later we will be specifying our cookbook dependencies in this metadata file.
+The first two lines describe the name and version of the cookbook. The rest of the specifies our cookbook dependencies.
 ```ruby
 name    'minions'
 version '0.0.1'
@@ -59,9 +57,7 @@ version '0.0.1'
 ##Setting up the Local Environment
 
 ### Berkshelf
-Berkshelf is a dependency manager for Chef. The cookbook we write will depend on cookbooks written by the chef community. B
-
-Berkshelf uses a file called Berksfile to determine what dependencies to fetch and where to fetch these dependencies from. You will notice that an empty Berksfile has been created for you. 
+Berkshelf is a dependency manager for Chef. Berkshelf uses a file called Berksfile to determine what dependencies to fetch and where to fetch these dependencies from. You will notice that an empty Berksfile has been created for you. 
 
 Add the following lines to your Berksfile.
 ```ruby
@@ -150,11 +146,15 @@ exit
 ```
 ### Check your instance status
 If we run `kitchen list` now, we should see that the status of our instance is 'Created'.
+
 ### Your First Cookbook
 Main Objective: Write a Chef cookbook that will provision an application server for the Minions app.
+
 #### Sharing a Folder
 How will we get the app code onto the virtual machine? For now, let's share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
+
 Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
+
 You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
 
 #### kitchen.yml:
@@ -181,37 +181,35 @@ exit
 ```
 ### Installing Ruby
 Since Minions is a ruby app, we must install ruby on the guest box in order to run it.
-We are going to use the rbenv cookbook to install ruby. First we need to add the rbenv cookbook as a dependency in our metadata file.
 
-Add the following line to `metadata.rb`
-```ruby
-depends 'rbenv', '1.7.1'
-```
-### Chef supermarket
-Take a moment to look at the rbenv cookbook documentation https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
+We are going to use the rbenv cookbook to install ruby. First mke sure that rbenv cookbook is listed as a dependency in our metadata file.
+
+Take a moment to look at the [rbenv cookbook documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
 
 We can use the `rbenv_ruby` resource to install ruby globally on the vagrant machine. We have created an empty `default.rb` file for you in the recipes directory.
+
 Let's include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::default recipe` installs `rbenv`. And the `rbenv::ruby_build` recipe to install `ruby-build` (an rbenv plugin that allows rbenv to build rubies).
 ```ruby
 include_recipe 'rbenv::default'
 include_recipe 'rbenv::ruby_build'
 ```
+
 ### Exercise 1: Install Ruby 2.1.1
-Hint: Look at the [documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
+Now that we have installed rbenv and ruby_build, let's use the `rbenv_ruby` LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe.
 
-Now that we have installed rbenv and ruby_build, let's use the `rbenv_ruby` LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
-
-We must add our cookbook to the vagrant runlist. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
+We must add our cookbook to the vagrant runlist to apply it to the VM. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 
 In .kitchen.yml:
 ```ruby
 run_list:
   - minions
 ```
+
 Let's apply the cookbook to the instance. `kitchen converge` will apply your run_list to a created instance.
 ```
 kitchen converge
 ```
+
 ### SSH into box
 Login to the instance and check the ruby version:
 
@@ -238,14 +236,11 @@ Before installing bundler via the cookbook, let's write a serverspec test to mak
 Make sure your test fails on an unconverged instance and succeed after the cookbook is applied!
 
 ### Exercise 3: Install Bundler
-Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. 
+Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs.
 
-
-Converge your instance and see if the test you wrote succeeds.
-
+When you are ready, converge your instance and see if the test you wrote succeeds.
 
 Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
-
 
 ### Verify app is running
 When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message
@@ -253,13 +248,14 @@ When you have successfully installed Minion's dependencies try starting the app 
 Sinatra/1.4.5 has taken the stage on 4567 for development with backup from WEBrick
 ```
 
-
 Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen login` and execute the following command. It should show you the html from the front page with 'Hello Minions!'
 ```
 curl http://localhost:4567
 ```
+
 ### Access your app on a browser
 Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. When we access `http://localhost:4567` in a browser on our host, it will display content served at port 4567 on the guest VM.
+
 To set up the forwarded port, add the following line to your driver configuration in `.kitchen.yml`.
 ```ruby
   network:
@@ -277,7 +273,7 @@ But first, write as test and see it fail.
 
 ## Installing MySQL
 ### Add database cookbook
-We are going to use the database community cookbook (v 4.0.9) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Let's go ahead and add this dependency in our `metadata.rb` file.
+We are going to use the database community cookbook (v 4.0.9) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Make sure this dependency is included in our `metadata.rb` file.
 ###  Install MySQL server
 First we must install MySQL Community Server. >>The database cookbook depends on the MySQL cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook.>> First we must include the `mysql::server` recipe. Add the following lines to your `default.rb` recipe.
 ```ruby
