@@ -145,7 +145,7 @@ You can use http://codebeautify.org/yaml-validator to check if your yaml is vali
 #### kitchen.yml:
 ```YAML
 synced_folders:
-  - ["../app", "/minions"]
+  - ['../app', '/minions']
 ```
 Since we have changed our VM configuration we must destroy the VM and recreate it.
 ```
@@ -176,8 +176,8 @@ Take a moment to look at the rbenv cookbook documentation https://supermarket.ch
 We can use the `rbenv_ruby` resource to install ruby globally on the vagrant machine. We have created an empty `default.rb` file for you in the recipes directory.
 Let's include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::default recipe` installs `rbenv`. And the `rbenv::ruby_build` recipe to install `ruby-build` (an rbenv plugin that allows rbenv to build rubies).
 ```ruby
-include_recipe "rbenv::default"
-include_recipe "rbenv::ruby_build"
+include_recipe 'rbenv::default'
+include_recipe 'rbenv::ruby_build'
 ```
 ### Exercise 1 : Install Ruby 2.1.1
 Hint: Look at the documentation => https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
@@ -221,7 +221,7 @@ To set up the forwarded port, add the following line to your driver configuratio
 :kitchen.yml
 ```ruby
   network:
-    - ["forwarded_port", {guest: 4567, host: 4567}]
+    - ['forwarded_port', {guest: 4567, host: 4567}]
 ```
 ### Recreate the VM
 Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` let's use the `kitchen setup` command, which will create the VM apply the runlist with Chef.
@@ -236,7 +236,7 @@ We are going to use the database community cookbook (v 2.3.1) from the [chef sup
 ###  Install mysql server
 First we must install the mysql server. The database cookbook depends on the mysql cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook. First we must include the `mysql::server recipe`. Add the following lines to your `default.rb` recipe.
 ```ruby
-include_recipe "mysql::server"
+include_recipe 'mysql::server'
 ```
 ### Verify mysql is running.
 Now let's run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that mysql is running by executing `service mysql status` returns running. Exit the machine.
@@ -286,11 +286,11 @@ Mysql on Ubuntu might have a problem, so you will have to sometimes make sure it
 Try using the service resource to start mysql if it has not started. Before you run the recipe to create a database.
 
 ```ruby
-service "mysql" do
+service 'mysql' do
   action :start
-  only_if "test -f /etc/init.d/mysql"
+  only_if 'test -f /etc/init.d/mysql'
 end
 ```
 
 ### Installing ruby 2.1.1
-There is a bug in the documentation - as the resource does not accept "names". Just specify the version as the resource name and it will work.
+There is a bug in the documentation – as the resource does not accept "names". Just specify the version as the resource name and it will work.
