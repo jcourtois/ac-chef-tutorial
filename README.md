@@ -86,11 +86,15 @@ Look inside the `.kitchen.yml` file.
 ```YAML
 driver:
   name: vagrant
+  synced_folders:
+    - ['../app', '/minions']
+  network:
+    - ['forwarded_port', {guest: 4567, host: 4567}]
 ```
 What is a driver?
 We have specified that we will use vagrant (on top of virtualbox) as a driver. This means that kitchen will create instances using vagrant (other drivers allow you to create instances in the cloud using various cloud drivers).
 
-Look inside the `kitchen.yml` file again.
+Inside the `kitchen.yml` file:
 ```YAML
 provisioner:
   name: chef_solo
@@ -98,7 +102,7 @@ provisioner:
 
 What is a provisioner? We have specified that we will be using chef_solo as a provisioner (this means that we will not be needing a chef server)
 
-Look inside the `kitchen.yml` file.
+Inside the `kitchen.yml` file:
 ```YAML
 platforms:
   - name: ubuntu15
@@ -195,8 +199,8 @@ include_recipe 'rbenv::default'
 include_recipe 'rbenv::ruby_build'
 ```
 
-### Exercise 1: Install Ruby 2.1.1
-Now that we have installed rbenv and ruby_build, let's use the `rbenv_ruby` LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe.
+### Exercise 1: Install Ruby 2.1.6
+Now that we have installed rbenv and ruby_build, let's use the `rbenv_ruby` LWRP (lightweight resources and providers) to install ruby 2.1.6.
 
 We must add our cookbook to the vagrant runlist to apply it to the VM. Add the following to the minions suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 
@@ -214,7 +218,7 @@ kitchen converge
 ### SSH into box
 Login to the instance and check the ruby version:
 
-On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
+On the vagrant machine run `ruby -v`. The command should print `2.1.6` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
 
 Now, that we have ruby installed let's try running the app
 ```sh
@@ -253,20 +257,6 @@ Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen log
 ```
 curl http://localhost:4567
 ```
-
-### Access your app on a browser
-Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. When we access `http://localhost:4567` in a browser on our host, it will display content served at port 4567 on the guest VM.
-
-To set up the forwarded port, add the following line to your driver configuration in `.kitchen.yml`.
-```ruby
-  network:
-    - ['forwarded_port', {guest: 4567, host: 4567}]
-```
-### Recreate the VM
-Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` let's use the `kitchen setup` command, which will create the VM and apply the runlist with Chef.
-
-### Try to add a minion.
-Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to `http://localhost:4567`. You should see 'Hello Minions!' displayed in the browser.
 
 Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe.
 
