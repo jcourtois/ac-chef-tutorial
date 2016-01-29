@@ -142,10 +142,12 @@ How will we get the app code onto the virtual machine? For now, lets share a dir
 Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
 You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
 
-:kitchen.yml
+#### kitchen.yml:
+```YAML
 synced_folders:
   - ["../app", "/minions"]
- Since we have changed our VM configuration we must destroy the VM and recreate it.
+```
+Since we have changed our VM configuration we must destroy the VM and recreate it.
 ```
 kitchen destroy
 kitchen create
