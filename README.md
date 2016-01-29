@@ -35,7 +35,9 @@ berks --version
 
 First clone the workshop repository from github in your preferred location.
 
-git clone https://github.com/womensdiy/vagrant-chef.git
+```sh
+git clone https://github.com/jcourtois/ac-chef-tutorial.git
+```
 
 ### Whats inside the repo?
 This repo contains two directories. The 'app' directory includes a ruby app called Minions. Our goal is to use Chef to provision a virtual machine machine so that it can run the Minions app. Take a minute to inspect the app directory.
