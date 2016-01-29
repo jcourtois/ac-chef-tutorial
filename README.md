@@ -9,7 +9,7 @@ Also you will see that setting up machines is a lot of waiting around - take thi
 We'll be using the following tools.
 - [Vagrant](https://www.vagrantup.com/)
 - [Virtualbox](https://www.virtualbox.org/)
-- [Chef-dk](https://downloads.chef.io/chef-dk/mac/#/)
+- [ChefDK](https://downloads.chef.io/chef-dk/mac/#/)
 
 It's useful to have a decent text editor handy, too – like [Sublime](http://www.sublimetext.com/3) or [Atom](https://atom.io/).
 
@@ -164,9 +164,11 @@ cd minions
 ls
 exit
 ```
-### Install Ruby With Chef
-Since this is a ruby app we must install ruby on the guest box in order to run the Minions app.
-We are going to use the rbenv cookbook to install ruby. First we need to add the rbenv cookbook as a dependency in our metadata file. Add the following line to `metadata.rb`
+### Installing Ruby
+Since Minions is a ruby app, we must install ruby on the guest box in order to run it.
+We are going to use the rbenv cookbook to install ruby. First we need to add the rbenv cookbook as a dependency in our metadata file.
+
+Add the following line to `metadata.rb`
 ```ruby
 depends 'rbenv', '1.7.1'
 ```
@@ -179,11 +181,12 @@ Let's include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::
 include_recipe 'rbenv::default'
 include_recipe 'rbenv::ruby_build'
 ```
-### Exercise 1 : Install Ruby 2.1.1
-Hint: Look at the documentation => https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
+### Exercise 1: Install Ruby 2.1.1
+Hint: Look at the [documentation](https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1)
 Now that we have installed rbenv and ruby_build, Let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
  We must add our cookbook to the vagrant runlist. Add the following to the wdiy suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
-:kitchen.yml
+
+In .kitchen.yml:
 ```ruby
 run_list:
   - wdiy
@@ -201,8 +204,6 @@ On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the co
 cd /minions/lib
 ruby run_app.rb
 ```
- Not ready to run app yet?
- Not sure what the error means? Look it up or ask!
 Oops! You should see the following error 'cannot load such file -- sinatra (LoadError)'. We need to install bundler on the VM so that we can install Minion's dependencies (which includes Sinatra). Your turn!
 ### Exercise 2: Install Bundler
 Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
@@ -216,18 +217,17 @@ Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen log
 curl http://localhost:4567
 ```
 ### Access your app on a browser
-Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. Therefore when we access localhost:4567 in our host browser it will display content from the guest at port 4567
+Next, we would like to see 'Hello Minions!' displayed in a browser. This is a little trickier because our guest machine has no browser. We want to use the browser on our host machine. To do this we would like to forward port 4567 from the guest to the host machine. When we access `http://localhost:4567` in a browser on our host, it will display content served at port 4567 on the guest VM.
 To set up the forwarded port, add the following line to your driver configuration in `.kitchen.yml`.
-:kitchen.yml
 ```ruby
   network:
     - ['forwarded_port', {guest: 4567, host: 4567}]
 ```
 ### Recreate the VM
-Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` let's use the `kitchen setup` command, which will create the VM apply the runlist with Chef.
+Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` let's use the `kitchen setup` command, which will create the VM and apply the runlist with Chef.
 
 ### Try to add a minion.
-Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to localhost:4567. You should see 'Hello Minions!' displayed in the browser.
+Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to `http://localhost:4567`. You should see 'Hello Minions!' displayed in the browser.
 
 Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the MySQL database yet! Time to improve our `default.rb` recipe.
 ## Installing MySQL
