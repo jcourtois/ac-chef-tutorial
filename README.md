@@ -239,7 +239,7 @@ First we must install MySQL Community Server. >>The database cookbook depends on
 include_recipe 'mysql::server'
 ```
 ### Verify mysql is running.
-Now let's run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that MySQL is running by executing `service mysql status` returns running. Exit the machine.
+Run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that MySQL is running by executing `service mysql status` returns running. Exit the machine.
 
 ### Setting the root password
 The next thing we need would like to do is set the root password so that our app will be able to connect to MySQL. We do this by setting the server_root_password attribute. By looking in the `dbclient.rb` file in the app/lib directory we can determine the the app expects the root password to be 'thought'. Therefore add the following line to the `defaults.rb` file in your attributes directory. Let's also set the repl password so that we can connect to the MySQL command prompt using the same password.
@@ -248,7 +248,7 @@ default['mysql']['server_root_password'] = 'thought'
 default['mysql']['server_repl_password'] = 'thought'
 ```
 #### Check if the password has been added.
-Now let's converge again. Now when we log into the machine we should be able to connect to the MySQL REPL by executing...
+Converge again. When we log into the machine, we should be able to connect to the MySQL REPL by executing:
 ```sh
 mysql -uroot -pthought
 ```
