@@ -124,7 +124,10 @@ This will create an instance but will not apply any recipes. To verify that the 
 ```
 kitchen login
 ```
+
 Look around the VM
+
+
 Now you are logged into the virtual machine! Your command prompt should have changed to indicate this. From now on we will call this machine the VM or the guest. Take a moment to look around. Maybe try the following commands...
 ```
 whoami
@@ -202,10 +205,13 @@ Let's apply the cookbook to the instance. `kitchen converge` will apply your run
 kitchen converge
 ```
 ### SSH into box
-kitchen login
- Check the ruby version
+Login to the instance and check the ruby version:
+
+
 On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
- Now, that we have ruby installed let's try running the app
+
+
+Now, that we have ruby installed let's try running the app
 ```sh
 cd /minions/lib
 ruby run_app.rb
