@@ -59,6 +59,7 @@ Berkshelf is a dependency manager for Chef. The cookbook we write will depend on
  Add the following lines to your Berksfile.
 ```ruby
 source 'https://supermarket.getchef.com'
+metadata
 ```
 
 ###  Berksfile
