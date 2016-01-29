@@ -218,14 +218,21 @@ Before installing bundler via the cookbook, let's write a serverspec test to mak
 (Make sure your test fails on an unconverged instance and succeed after the cookbook is applied.)
 
 ### Exercise 3: Install Bundler
-Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
+Extend `default.rb` so that it installs the gem 'bundler' on the VM. Hint: look at the rbenv cookbook docs. When you are ready, converge your instance. 
+
+
+Converge your instance and see if the test you wrote succeeds.
+
+
+Now login, and try running `bundle install` in the minions directory. Were you successful? If not, keep trying!
+
+
 ### Verify app is running
 When you have successfully installed Minion's dependencies try starting the app again. If it starts successfully you should see the following message
 ```
 Sinatra/1.4.5 has taken the stage on 4567 for development with backup from WEBrick
 ```
 
-Converge your instance and see if the test you wrote succeeds.
 
 Let's quickly verify this with `curl`. Open a new terminal tab, run `kitchen login` and execute the following command. It should show you the html from the front page with 'Hello Minions!'
 ```
