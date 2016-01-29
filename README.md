@@ -138,7 +138,7 @@ If we run `kitchen list` now, we should see that the status of our instance is '
 ### Your First Cookbook
 Main Objective: Write a Chef cookbook that will provision an application server for the Minions app.
 #### Sharing a Folder
-How will we get the app code onto the virtual machine? For now, lets share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
+How will we get the app code onto the virtual machine? For now, let's share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
 Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
 You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
 
@@ -152,15 +152,14 @@ Since we have changed our VM configuration we must destroy the VM and recreate i
 kitchen destroy
 kitchen create
 ```
- Now lets test whether the synced folder is working
+Now let's test whether the synced folder is working
+```sh
 kitchen login
-```
 cd /
 ls
 ```
 You should see the minions directory on the virtual machine
-
-```
+```sh
 cd minions
 ls
 exit
@@ -174,15 +173,15 @@ depends 'rbenv', '1.7.1'
 ### Chef supermarket
 Take a moment to look at the rbenv cookbook documentation https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
 
-Now we can use the `rbenv_ruby` resource to install ruby globally on the vagrant machine. We have created an empty `default.rb` file for you in the recipes directory.
- Now lets include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::default recipe` installs `rbenv`. And the `rbenv::ruby_build` recipe to install `ruby-build` (an rbenv plugin that allows rbenv to build rubies).
+We can use the `rbenv_ruby` resource to install ruby globally on the vagrant machine. We have created an empty `default.rb` file for you in the recipes directory.
+Let's include the `rbenv::default` and `rbnev::ruby_build recipes`. The `rbenv::default recipe` installs `rbenv`. And the `rbenv::ruby_build` recipe to install `ruby-build` (an rbenv plugin that allows rbenv to build rubies).
 ```ruby
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 ```
 ### Exercise 1 : Install Ruby 2.1.1
 Hint: Look at the documentation => https://supermarket.chef.io/cookbooks/rbenv/versions/1.7.1
-Now that we have installed rbenv and ruby_build, Lets use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
+Now that we have installed rbenv and ruby_build, Let's use the 'rbenv_ruby' LWRP (lightweight resources and providers) to install ruby 2.1.1 version as a system wide ruby version. Make sure you use the attributes to set ruby 2.1.1 globally on your box. Add the necessary lines to the recipe. After you are done, follow the steps below to apply the cookbook to the VM and verify your changes.
  We must add our cookbook to the vagrant runlist. Add the following to the wdiy suite under suites: in `.kitchen.yml`. If a cookbook is added to a runlist rather than a specific recipe the default recipe is run.
 :kitchen.yml
 ```ruby
@@ -197,7 +196,7 @@ kitchen converge
 kitchen login
  Check the ruby version
 On the vagrant machine run `ruby -v`. The command should print `2.1.1` to the console. If you were unsuccessful, keep updating your recipe and converging until it works!
- Now, that we have ruby installed lets try running the app
+ Now, that we have ruby installed let's try running the app
 ```sh
 cd /minions/lib
 ruby run_app.rb
@@ -225,7 +224,7 @@ To set up the forwarded port, add the following line to your driver configuratio
     - ["forwarded_port", {guest: 4567, host: 4567}]
 ```
 ### Recreate the VM
-Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` lets use the `kitchen setup` command, which will create the VM apply the runlist with Chef.
+Now, we must destroy and recreate the VM in order to apply this change. Run `kitchen destroy` from the host machine. Now, this time instead of running `kitchen create` let's use the `kitchen setup` command, which will create the VM apply the runlist with Chef.
 
 ### Try to add a minion.
 Let's login to the guest machine again, `bundle install`, and start the minions application. From the browser on your host machine, navigate to localhost:4567. You should see 'Hello Minions!' displayed in the browser.
@@ -233,23 +232,23 @@ Let's login to the guest machine again, `bundle install`, and start the minions 
 Next try to add a minion. Oh no! A database error. This makes sense because we haven't installed the mysql database yet! Time to improve our `default.rb` recipe.
 ## Install Mysql
 ### Add database cookbook
-We are going to use the database community cookbook (v 2.3.1) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Lets go ahead and add this dependency in our `metadata.rb` file.
+We are going to use the database community cookbook (v 2.3.1) from the [chef supermarket](https://supermarket.chef.io/cookbooks/database). Let's go ahead and add this dependency in our `metadata.rb` file.
 ###  Install mysql server
 First we must install the mysql server. The database cookbook depends on the mysql cookbook v5.0. You can see this by clicking on the dependencies tab in the database cookbook documentation. Therefore, we also have access to the recipes from the mysql cookbook. First we must include the `mysql::server recipe`. Add the following lines to your `default.rb` recipe.
 ```ruby
 include_recipe "mysql::server"
 ```
 ### Verify mysql is running.
-Now lets run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that mysql is running by executing `service mysql status` returns running. now lets exit.
+Now let's run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that mysql is running by executing `service mysql status` returns running. Exit the machine.
 
-### Set root password
+### Setting the root password
 The next thing we need would like to do is set the root password so that our app will be able to connect to mysql. We do this by setting the server_root_password attribute. By looking in the `dbclient.rb` file in the app/lib directory we can determine the the app expects the root password to be 'thought'. Therefore add the following line to the `defaults.rb` file in your attributes directory. Let's also set the repl password so that we can connect to the mysql command prompt using the same password.
 ```ruby
 default['mysql']['server_root_password'] = 'thought'
 default['mysql']['server_repl_password'] = 'thought'
 ```
 #### Check if the password has been added.
-Now lets converge again. Now when we log into the machine we should be able to connect to the mysql repl by executing...
+Now let's converge again. Now when we log into the machine we should be able to connect to the mysql repl by executing...
 ```sh
 mysql -uroot -pthought
 ```
