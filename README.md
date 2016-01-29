@@ -93,12 +93,12 @@ We have specified that we will be using chef_solo as a provisioner (this means t
 
 Look inside the `kitchen.yml` file.
 ```YAML
-  - name: ubuntu14
+  - name: ubuntu15
     driver:
       box: bento/ubuntu-15.04
 ```
 What is our platform?
-The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-14.10 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
+The above lines specifies the type of instance kitchen should create. We will be testing our cookbook on ubuntu-15.04 image. The last 2 lines tell test-kitchen which base image to use when creating instances. 
 
 Look inside the `kitchen.yml` file.
 Here we have defined one suite named minions.
@@ -109,7 +109,7 @@ suites:
 
 ### Print out kitchen instances
 
-The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run `kitchen list` it should list a single instance named 'wdiy-ubuntu14' that is currently identified.
+The first important test-kitchen command you should know is kitchen list. This prints out the instances that kitchen knows about. When you run `kitchen list` it should list a single instance named 'minions-ubuntu15' that is currently identified.
 kitchen list
 
 ### Creating a Virtual Machine
