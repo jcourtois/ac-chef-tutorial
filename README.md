@@ -2,7 +2,7 @@
 
 ## Before we start
 We want to make this a great learning experience. We would encourage you to type all the code and commands yourself and follow the steps. Also please make sure you understand why and what you are doing. Don't hesitate to ask us for help.
-Also you will see that setting up machines is a lot of waiting around, not a problem - you can work on your worksheets while waiting.
+Also you will see that setting up machines is a lot of waiting around - take this as a time to learn more about the tools you're using by reading `--help` and `man` pages.
 
 ## Prerequisites
 
