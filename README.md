@@ -126,7 +126,7 @@ kitchen create
 ```
 This will create an instance but will not apply any recipes. To verify that the virtual machine was successfully, open virtualbox manager (you can do this by running `virtualbox` from the command line) and look for the running guest machine.
 
-#### SSH into the new virtual machine
+### SSH into the new virtual machine
 ```
 kitchen login
 ```
@@ -150,17 +150,18 @@ If we run `kitchen list` now, we should see that the status of our instance is '
 ### Your First Cookbook
 Main Objective: Write a Chef cookbook that will provision an application server for the Minions app.
 
-#### Sharing a Folder
+### Sharing a Folder
 How will we get the app code onto the virtual machine? For now, let's share a directory from our host machine with the guest VM. Add the following line to your driver configuration in `.kitchen.yml`.
 
 Be careful when you change the .yml files, they have strict syntax rules. Even a wrongly tabbed space can make a yaml file invalid. 
 
 You can use http://codebeautify.org/yaml-validator to check if your yaml is valid.
 
-#### kitchen.yml:
+### kitchen.yml:
 ```YAML
-synced_folders:
-  - ['../app', '/minions']
+driver:
+  synced_folders:
+    - ['../app', '/minions']
 ```
 Since we have changed our VM configuration we must destroy the VM and recreate it.
 ```
@@ -226,7 +227,7 @@ Oops! You should see the following error 'cannot load such file -- sinatra (Load
 As we evolve our recipe, we can manually test our work by logging into the VM and verifying its state from the command line. However we want to treat our infrastructure as similarly to real code as possible. Therefore we will automate our testing. 
 
 You will notice that within the cookbook directory we have added a test directory for you. We have created a file named `default_spec.rb` with one example test in it.
-#### Run the tests.
+### Run the tests.
 ```
 kitchen verify
 ```
@@ -272,25 +273,25 @@ Next try to add a minion. Oh no! A database error. This makes sense because we h
 But first, write as test and see it fail.
 
 ## Installing MySQL
-#### New dependencies
+### New dependencies
 ```ruby
 depends 'apt',             '=2.9.2'
 depends 'mysql',           '~> 6.0'
 depends 'mysql2_chef_gem', '~> 1.0'
 depends 'database',        '=4.0.9'
 ```
-####  Install MySQL server
+###  Install MySQL server
 We can install MySQL by using the [`mysql_service`](https://github.com/chef-cookbooks/mysql#mysql_service) resource. You can get away with just supplying the port, version, initial root password, and actions.
 
-#### Verify mysql is running.
+### Verify mysql is running.
 Run `kitchen converge` to apply our recipe to the VM. When the converge is finished login to the VM so we can verify start the installation worked. Login to the guest machine and verify that MySQL is running by executing `service mysql status` returns running. Exit the machine.
 
-#### Check if the password has been added.
+### Check if the password has been added.
 Converge again. When we log into the machine, we should be able to connect to the MySQL REPL by executing:
 ```sh
 mysql -uroot -pthought
 ```
-#### Create Minion Database
+### Create Minion Database
 After you have successfully connected to the MySQL REPL enter `show databases`; in the REPL. As you can see, there are no databases currently. We must create one with the name "miniondb" for the app to connect to, so that we can add and remove minions.
 
 ### Include recipe to help create a database
@@ -301,7 +302,7 @@ include_recipe 'database::mysql'
 ### Exercise 4: Create a MySQL database with the name miniondb
 Take a look at the database cookbook documentation. Now, use the [`mysql_database`](https://github.com/chef-cookbooks/database#database) LWRP to create a database with the name miniondb. You will know you are successful when you see miniondb after executing `show databases` in the MySQL REPL.
 
-#### Check if your app works!
+### Check if your app works!
 Run your app. Check if you can add, view and remove your minions. You will need to figure out how to use tasks defined in the app to create the required table. 
 
 ### Exercise 5: Add Another Platform
